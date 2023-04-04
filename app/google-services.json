@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "183383552891",
+    "project_id": "travelbookingdb",
+    "storage_bucket": "travelbookingdb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183383552891:android:51052efa500ef366fc43de",
+        "android_client_info": {
+          "package_name": "com.project.travelbooking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "183383552891-ai99933076g2t6s2iv8ki2nlr2mpnpb3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4LQj3vgPzIZbP1KJv7ptGOrNqSnhs7Cc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "183383552891-ai99933076g2t6s2iv8ki2nlr2mpnpb3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
