@@ -36,7 +36,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.RecentsViewH
     @Override
     public RecentsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.recents_row_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.place_row_item, parent, false);
 
         // here we create a recyclerview row item layout file
         return new RecentsViewHolder(view);
@@ -91,9 +91,9 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.RecentsViewH
         public RecentsViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            placeImage = itemView.findViewById(R.id.place_image);
-            placeName = itemView.findViewById(R.id.place_name);
-            tourCount = itemView.findViewById(R.id.tour_count);
+            placeImage = itemView.findViewById(R.id.tour_image);
+            placeName = itemView.findViewById(R.id.tour_name);
+            tourCount = itemView.findViewById(R.id.place);
             rating = itemView.findViewById(R.id.place_rate_bar);
             rating.setIsIndicator(true);
         }

@@ -9,7 +9,7 @@
 
 
     <ImageView
-        android:id="@+id/place_image"
+        android:id="@+id/tour_image"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:adjustViewBounds="true"
@@ -20,31 +20,31 @@
         app:srcCompat="@drawable/recentimage1" />
 
     <TextView
-        android:id="@+id/place_name"
+        android:id="@+id/tour_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:text="AM Lake"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/place_image" />
+        app:layout_constraintTop_toBottomOf="@+id/tour_image" />
 
     <TextView
-        android:id="@+id/tour_count"
+        android:id="@+id/place"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:text="India"
-        app:layout_constraintStart_toStartOf="@+id/place_name"
-        app:layout_constraintTop_toBottomOf="@+id/place_name" />
+        app:layout_constraintStart_toStartOf="@+id/tour_name"
+        app:layout_constraintTop_toBottomOf="@+id/tour_name" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@+id/tour_count"
-        app:layout_constraintTop_toBottomOf="@+id/tour_count"
+        app:layout_constraintStart_toStartOf="@+id/place"
+        app:layout_constraintTop_toBottomOf="@+id/place"
         android:layout_marginTop="2dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"

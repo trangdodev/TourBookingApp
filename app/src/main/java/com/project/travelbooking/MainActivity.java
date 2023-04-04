@@ -11,13 +11,13 @@ import com.project.travelbooking.adapter.PlaceAdapter;
 import com.project.travelbooking.adapter.TourAdapter;
 import com.project.travelbooking.helper.TravelBookingDbHelper;
 import com.project.travelbooking.model.PlaceModel;
-import com.project.travelbooking.model.RecentsModel;
-import com.project.travelbooking.model.TopPlacesModel;
+import com.project.travelbooking.model.TourModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Map user = new HashMap<String,Object>();
+        Map user = new HashMap<String, Object>();
         user = (Map) getIntent().getSerializableExtra("loggedUserData");
 
         TextView tvName = findViewById(R.id.tvName);
@@ -45,49 +45,48 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void callback(Integer data) {
                             placeModel.setTourCount(data);
-                            setRecentRecycler(listOfPlaces);
+                            setPlacesRecycler(listOfPlaces);
                         }
                     }, placeModel.getPlaceId());
                 });
             }
         });
 
-        List<RecentsModel> recentsDataList = new ArrayList<>();
-        recentsDataList.add(new RecentsModel("AM Lake","India","From $200",R.drawable.recentimage1));
-        recentsDataList.add(new RecentsModel("Nilgiri Hills","India","From $300",R.drawable.recentimage2));
-        recentsDataList.add(new RecentsModel("AM Lake","India","From $200",R.drawable.recentimage1));
-        recentsDataList.add(new RecentsModel("Nilgiri Hills","India","From $300",R.drawable.recentimage2));
-        recentsDataList.add(new RecentsModel("AM Lake","India","From $200",R.drawable.recentimage1));
-        recentsDataList.add(new RecentsModel("Nilgiri Hills","India","From $300",R.drawable.recentimage2));
-
-
-        List<TopPlacesModel> topPlacesDataList = new ArrayList<>();
-        topPlacesDataList.add(new TopPlacesModel("Kasimir Hill","India","$200 - $500",R.drawable.topplaces));
-        topPlacesDataList.add(new TopPlacesModel("Kasimir Hill","India","$200 - $500",R.drawable.topplaces));
-        topPlacesDataList.add(new TopPlacesModel("Kasimir Hill","India","$200 - $500",R.drawable.topplaces));
-        topPlacesDataList.add(new TopPlacesModel("Kasimir Hill","India","$200 - $500",R.drawable.topplaces));
-        topPlacesDataList.add(new TopPlacesModel("Kasimir Hill","India","$200 - $500",R.drawable.topplaces));
-
-        setTopPlacesRecycler(topPlacesDataList);
+        TravelBookingDbHelper.getAllTours(new Callback<ArrayList<TourModel>>() {
+            @Override
+            public void callback(ArrayList<TourModel> listOfTours) {
+                ArrayList<Integer> placeIds = listOfTours.stream().map(tour -> tour.getPlaceId()).collect(Collectors
+                        .toCollection(ArrayList::new));
+                TravelBookingDbHelper.getPlaceNamesFromPlaceIds(new Callback<ArrayList<PlaceModel>>() {
+                    @Override
+                    public void callback(ArrayList<PlaceModel> places) {
+                        listOfTours.forEach(tour -> {
+                            PlaceModel place = places.stream().filter(p -> p.getPlaceId() == tour.getPlaceId()).findFirst().get();
+                            tour.setPlaceName(place.getPlaceName());
+                        });
+                        setToursRecycler(listOfTours);
+                    }
+                }, placeIds);
+            }
+        });
     }
 
-    private  void setRecentRecycler(List<PlaceModel> recentsDataList){
+    private void setPlacesRecycler(List<PlaceModel> placesDataList) {
 
         recentRecycler = findViewById(R.id.recent_recycler);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         recentRecycler.setLayoutManager(layoutManager);
-        placeAdapter = new PlaceAdapter(this, recentsDataList);
+        placeAdapter = new PlaceAdapter(this, placesDataList);
         recentRecycler.setAdapter(placeAdapter);
 
     }
 
-    private  void setTopPlacesRecycler(List<TopPlacesModel> topPlacesDataList){
+    private void setToursRecycler(List<TourModel> toursDataList) {
 
         topPlacesRecycler = findViewById(R.id.top_places_recycler);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         topPlacesRecycler.setLayoutManager(layoutManager);
-        tourAdapter = new TourAdapter(this, topPlacesDataList);
+        tourAdapter = new TourAdapter(this, toursDataList);
         topPlacesRecycler.setAdapter(tourAdapter);
-
     }
 }

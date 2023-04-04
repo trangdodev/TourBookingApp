@@ -44,7 +44,17 @@ public class TourModel {
     private String DurationTimeOfTour;
     private List<List<String>> ScheduleOfTour;
     private String Description;
+    @Exclude
+    public String getPlaceName() {
+        return PlaceName;
+    }
+    @Exclude
+    public void setPlaceName(String placeName) {
+        PlaceName = placeName;
+    }
 
+    @Exclude
+    private String PlaceName;
 
     @Exclude
     public Map<String, Object> toMap() {

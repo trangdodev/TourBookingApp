@@ -90,11 +90,31 @@ public class TravelBookingDbHelper {
         });
     }
 
+    public static void getAllTours(@NonNull Callback<ArrayList<TourModel>> finishedCallback) {
+        db.collection("tours").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                ArrayList<TourModel> listOfTours = new ArrayList<TourModel>(queryDocumentSnapshots.toObjects(TourModel.class));
+                finishedCallback.callback(listOfTours);
+            }
+        });
+    }
+
     public static void countTourOfPlaces(@NonNull Callback<Integer> finishedCallback, int placeId) {
         db.collection("tours").whereEqualTo("placeId", placeId).count().get(AggregateSource.SERVER).addOnSuccessListener(new OnSuccessListener<AggregateQuerySnapshot>() {
             @Override
             public void onSuccess(AggregateQuerySnapshot aggregateQuerySnapshot) {
                 finishedCallback.callback((int) aggregateQuerySnapshot.getCount());
+            }
+        });
+    }
+
+    public static  void getPlaceNamesFromPlaceIds(@NonNull Callback<ArrayList<PlaceModel>> finishedCallback, ArrayList<Integer> placeIds){
+        db.collection("places").whereIn("placeId", placeIds).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                ArrayList<PlaceModel> listOfPlaces = new ArrayList<PlaceModel>(queryDocumentSnapshots.toObjects(PlaceModel.class));
+                finishedCallback.callback(listOfPlaces);
             }
         });
     }
@@ -135,7 +155,7 @@ public class TravelBookingDbHelper {
                 // If dont have any places we should seed data for them
                 if (numberOfTours == 0) {
                     ArrayList<TourModel> listOfTours = new ArrayList<TourModel>();
-                    listOfTours.add(new TourModel(1, 1, "Tour 4 đảo Nam Phú Quốc - 1 ngày", "143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh Kiên Giang", 9.1, 645000, 800000, "Tiết kiệm 20%",
+                    listOfTours.add(new TourModel(1, 1, "Tour 4 đảo Nam Phú Quốc - 1 ngày", "143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh Kiên Giang", 9.1F, 645000, 800000, "Tiết kiệm 20%",
                             "https://phuquoctv.vn/assets/uploads/tours/5ee1964a7221b-tour-4-dao-phu-quoc-1-ngay-phuquoctv-4.jpg", "8 giờ 30 phút",
                             Arrays.asList(Arrays.asList("08:30-17:00 Đón khách", "Tham quan đảo Gầm Ghì, lặn ống thở và tắm biển", "Tham quan hòn Bườm hoặc hòn Móng Tay, lặn ống thở và tắm biển", "Tham quan hòn Mây Rút Trong và dùng bữa trưa", "Trải nghiệm dịch vụ đi dưới biển Seawalker (chi phí tự túc)", "Trả khách", "Kết thúc tour.")),
                             "Với cát trắng nguyên sơ và nước màu ngọc lam, khung cảnh của Phú Quốc thực sự là một bữa tiệc cho các giác quan. Bạn sẽ đến với thiên đường Hòn Móng Tay để phơi nắng trên bãi biển xinh đẹp dưới bóng mát của hàng trăm cây cọ. Sau đó, bạn sẽ được khám phá thế giới dưới nước đầy màu sắc khi lặn tại Hòm Gầm Ghì. Sau bữa trưa ngon miệng được chuẩn bị bởi thuỷ thủ đoàn, bạn sẽ được cảm nhận bãi biển cát ngọc ngút ngàn và lặn ống thở trong làn nước trong vắt tại điểm đến cuối cùng, đó chính là Hòn Mây Rút.\n" +
