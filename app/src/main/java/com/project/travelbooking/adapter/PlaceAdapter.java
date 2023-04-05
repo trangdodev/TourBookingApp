@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.travelbooking.DetailsActivity;
 import com.project.travelbooking.R;
+import com.project.travelbooking.helper.RoundedCornersTransform;
 import com.project.travelbooking.model.PlaceModel;
+import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.List;
@@ -49,31 +51,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.RecentsViewH
         holder.rating.setRating((float)(recentsDataList.get(position).getRating()));
         holder.placeName.setText(recentsDataList.get(position).getPlaceName());
         holder.tourCount.setText(Integer.toString(recentsDataList.get(position).getTourCount()) + " hoạt động");
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try  {
-                    URL url = new URL(recentsDataList.get(position).getImageUrl());
-                    Bitmap img = BitmapFactory.decodeStream(url.openStream());
-                    holder.placeImage.setImageBitmap(img);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
-//        holder.placeImage.setImageBitmap(ImageHelper.LoadImageFromUrlOnUiThread(recentsDataList.get(position).getImageUrl()));
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(context, DetailsActivity.class);
-                context.startActivity(i);
-            }
-        });
-
+        Picasso.get().load(recentsDataList.get(position).getImageUrl()).into(holder.placeImage);
     }
 
     @Override
@@ -91,9 +69,9 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.RecentsViewH
         public RecentsViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            placeImage = itemView.findViewById(R.id.tour_image);
-            placeName = itemView.findViewById(R.id.tour_name);
-            tourCount = itemView.findViewById(R.id.place);
+            placeImage = itemView.findViewById(R.id.place_image);
+            placeName = itemView.findViewById(R.id.place_name);
+            tourCount = itemView.findViewById(R.id.place_count);
             rating = itemView.findViewById(R.id.place_rate_bar);
             rating.setIsIndicator(true);
         }

@@ -21,21 +21,20 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView recentRecycler, topPlacesRecycler;
+    RecyclerView recentRecycler, toursRecycler;
     PlaceAdapter placeAdapter;
     TourAdapter tourAdapter;
+    Map user = new HashMap<String, Object>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Map user = new HashMap<String, Object>();
         user = (Map) getIntent().getSerializableExtra("loggedUserData");
 
         TextView tvName = findViewById(R.id.tvName);
         tvName.setText(user.get("name").toString());
-        // Now here we will add some dummy data in our model class
 
         TravelBookingDbHelper.getAllPlaces(new Callback<ArrayList<PlaceModel>>() {
             @Override
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         TravelBookingDbHelper.getAllTours(new Callback<ArrayList<TourModel>>() {
             @Override
             public void callback(ArrayList<TourModel> listOfTours) {
-                ArrayList<Integer> placeIds = listOfTours.stream().map(tour -> tour.getPlaceId()).collect(Collectors
+                ArrayList<Integer> placeIds = listOfTours.stream().map(tour -> tour.getPlaceId()).distinct().collect(Collectors
                         .toCollection(ArrayList::new));
                 TravelBookingDbHelper.getPlaceNamesFromPlaceIds(new Callback<ArrayList<PlaceModel>>() {
                     @Override
@@ -63,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
                         listOfTours.forEach(tour -> {
                             PlaceModel place = places.stream().filter(p -> p.getPlaceId() == tour.getPlaceId()).findFirst().get();
                             tour.setPlaceName(place.getPlaceName());
+                            setToursRecycler(listOfTours);
                         });
-                        setToursRecycler(listOfTours);
                     }
                 }, placeIds);
             }
@@ -83,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setToursRecycler(List<TourModel> toursDataList) {
 
-        topPlacesRecycler = findViewById(R.id.top_places_recycler);
+        toursRecycler = findViewById(R.id.top_places_recycler);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        topPlacesRecycler.setLayoutManager(layoutManager);
-        tourAdapter = new TourAdapter(this, toursDataList);
-        topPlacesRecycler.setAdapter(tourAdapter);
+        toursRecycler.setLayoutManager(layoutManager);
+        tourAdapter = new TourAdapter(this, toursDataList, user);
+        toursRecycler.setAdapter(tourAdapter);
     }
 }

@@ -25,6 +25,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppTheme.Button" parent="Widget.Material3.Button.TextButton">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/purple</item>
+    </style>
 
     <style name="Theme.TravelBooking.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

@@ -1,6 +1,8 @@
 package com.project.travelbooking.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -12,21 +14,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.project.travelbooking.DetailsActivity;
 import com.project.travelbooking.R;
 import com.project.travelbooking.helper.CommonHelper;
+import com.project.travelbooking.helper.RoundedCornersTransform;
 import com.project.travelbooking.model.TourModel;
+import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TourAdapter extends RecyclerView.Adapter<TourAdapter.toursViewHolder> {
 
     Context context;
     List<TourModel> toursDataList;
+    Map user = new HashMap<String, Object>();
 
-    public TourAdapter(Context context, List<TourModel> toursDataList) {
+    public TourAdapter(Context context, List<TourModel> toursDataList, Map user) {
         this.context = context;
         this.toursDataList = toursDataList;
+        this.user = user;
     }
 
     @NonNull
@@ -40,26 +50,22 @@ public class TourAdapter extends RecyclerView.Adapter<TourAdapter.toursViewHolde
     }
 
     @Override
-    public void onBindViewHolder(@NonNull toursViewHolder holder, int position) {
-
-        holder.placeName.setText(toursDataList.get(position).getPlaceId());
+    public void onBindViewHolder(@NonNull toursViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        holder.placeName.setText(toursDataList.get(position).getPlaceName());
         holder.tourName.setText(toursDataList.get(position).getTourName());
         holder.price.setText(CommonHelper.FormatCurrency(toursDataList.get(position).getPrice()));
         holder.origin_price.setText(CommonHelper.FormatCurrency(toursDataList.get(position).getOriginPrice()));
-        Thread thread = new Thread(new Runnable() {
-
+        Picasso.get().load(toursDataList.get(position).getImageUrl()).transform(new RoundedCornersTransform()).into(holder.tourImage);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                try  {
-                    URL url = new URL(toursDataList.get(position).getImageUrl());
-                    Bitmap img = BitmapFactory.decodeStream(url.openStream());
-                    holder.tourImage.setImageBitmap(img);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            public void onClick(View view) {
+                Intent i = new Intent(context, DetailsActivity.class);
+                i.putExtra("tour", toursDataList.get(position).getTourId());
+                i.putExtra("user", (Serializable)user);
+                context.startActivity(i);
             }
         });
-        thread.start();
+
     }
 
     @Override
@@ -67,7 +73,7 @@ public class TourAdapter extends RecyclerView.Adapter<TourAdapter.toursViewHolde
         return toursDataList.size();
     }
 
-    public static final class toursViewHolder extends RecyclerView.ViewHolder{
+    public static final class toursViewHolder extends RecyclerView.ViewHolder {
 
         ImageView tourImage;
         TextView tourName, placeName, price, origin_price;
@@ -77,9 +83,9 @@ public class TourAdapter extends RecyclerView.Adapter<TourAdapter.toursViewHolde
 
             tourImage = itemView.findViewById(R.id.tour_image);
             tourName = itemView.findViewById(R.id.tour_name);
-            placeName = itemView.findViewById(R.id.place);
-            price = itemView.findViewById(R.id.price);
-            origin_price = itemView.findViewById(R.id.origin_price);
+            placeName = itemView.findViewById(R.id.place_name_of_tour);
+            price = itemView.findViewById(R.id.tour_price);
+            origin_price = itemView.findViewById(R.id.tour_origin_price);
 
         }
     }

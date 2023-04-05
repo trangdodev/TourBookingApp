@@ -9,7 +9,7 @@ import java.util.Map;
 
 @IgnoreExtraProperties
 public class TourModel {
-    public TourModel(int tourId, int placeId, String tourName, String address, float rating, double price, double originPrice, String promotionLabel, String imageUrl,  String durationTimeOfTour, List<List<String>> scheduleOfTour, String description) {
+    public TourModel(int tourId, int placeId, String tourName, String address, float rating, double price, double originPrice, String promotionLabel, String imageUrl,  String durationTimeOfTour,  List<String> scheduleOfTour, String description) {
         TourId = tourId;
         PlaceId = placeId;
         TourName = tourName;
@@ -23,6 +23,7 @@ public class TourModel {
         ScheduleOfTour = scheduleOfTour;
         Description = description;
     }
+    public TourModel(){}
 
     public int getTourId() {
         return TourId;
@@ -42,7 +43,7 @@ public class TourModel {
     private String PromotionLabel;
     private String ImageUrl;
     private String DurationTimeOfTour;
-    private List<List<String>> ScheduleOfTour;
+    private List<String> ScheduleOfTour;
     private String Description;
     @Exclude
     public String getPlaceName() {
@@ -149,11 +150,11 @@ public class TourModel {
         DurationTimeOfTour = durationTimeOfTour;
     }
 
-    public List<List<String>> getScheduleOfTour() {
+    public  List<String> getScheduleOfTour() {
         return ScheduleOfTour;
     }
 
-    public void setScheduleOfTour(List<List<String>> scheduleOfTour) {
+    public void setScheduleOfTour( List<String> scheduleOfTour) {
         ScheduleOfTour = scheduleOfTour;
     }
 
