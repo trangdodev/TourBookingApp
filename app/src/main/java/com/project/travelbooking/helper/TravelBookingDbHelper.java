@@ -57,6 +57,19 @@ public class TravelBookingDbHelper {
                 });
     }
 
+    public static void updateUser(@NonNull Callback<Map<String, Object>> finishedCallback, String name, String phone, String username) {
+        db.collection("users").whereEqualTo("username", username).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    DocumentSnapshot dr = queryDocumentSnapshots.getDocuments().get(0);
+                    dr.getDocumentReference("name").set(name);
+                    dr.getDocumentReference("phone").set(phone);
+                }
+            }
+        });
+    }
+
     public static void createUser(@NonNull Callback<Map<String, Object>> finishedCallback, String name, String phone, String username, String password) {
         Map<String, Object> user = new HashMap<>();
         user.put("name", name);
