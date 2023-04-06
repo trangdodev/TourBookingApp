@@ -1,5 +1,6 @@
 package com.project.travelbooking;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.Serializable;
@@ -29,6 +31,7 @@ public class ProfileFragment extends Fragment {
     private Map user;
 
     EditText edUName, edUPhone;
+    Button btnLogOut;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -69,7 +72,17 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         edUName = getView().findViewById(R.id.edUName);
         edUPhone = getView().findViewById(R.id.edUPhone);
+        btnLogOut = getView().findViewById(R.id.btnLogOut);
         edUName.setText(user.get("name").toString());
         edUPhone.setText(user.get("phone").toString());
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                startActivity(i);
+                getActivity().finish();
+
+            }
+        });
     }
 }
