@@ -21,10 +21,12 @@ public class BookingModel {
     private double ChildPrice;
     private int PaymentMethod;
 
+    private String ImageUrl;
+
     public BookingModel() {
     }
 
-    public BookingModel(String bookingId, String username, String name, String phone, int tourId, String tourName, String bookingDate, int adultQuantity, double adultPrice, int childQuantity, double childPrice, int paymentMethod) {
+    public BookingModel(String bookingId, String username, String name, String phone, int tourId, String tourName, String bookingDate, int adultQuantity, double adultPrice, int childQuantity, double childPrice, int paymentMethod, String imageUrl) {
         BookingId = bookingId;
         Username = username;
         Name = name;
@@ -37,6 +39,7 @@ public class BookingModel {
         ChildQuantity = childQuantity;
         ChildPrice = childPrice;
         PaymentMethod = paymentMethod;
+        ImageUrl = imageUrl;
     }
 
     @Exclude
@@ -54,6 +57,7 @@ public class BookingModel {
         result.put("ChildQuantity", ChildQuantity);
         result.put("ChildPrice", ChildPrice);
         result.put("PaymentMethod", PaymentMethod);
+        result.put("ImageUrl", ImageUrl);
 
         return result;
     }
@@ -152,5 +156,13 @@ public class BookingModel {
 
     public void setPaymentMethod(int paymentMethod) {
         PaymentMethod = paymentMethod;
+    }
+
+    public String getImageUrl() {
+        return ImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        ImageUrl = imageUrl;
     }
 }

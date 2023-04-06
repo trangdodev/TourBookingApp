@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "183383552891-1ku385jlpueg87hpbaivbp52e1ej8o46.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.travelbooking",
+            "certificate_hash": "5d7d46d21c36160527a97ff3fc82a469013dc81c"
+          }
+        },
+        {
           "client_id": "183383552891-ai99933076g2t6s2iv8ki2nlr2mpnpb3.apps.googleusercontent.com",
           "client_type": 3
         }

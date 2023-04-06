@@ -1,10 +1,16 @@
 package com.project.travelbooking;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.project.travelbooking.adapter.PlaceAdapter;
@@ -13,6 +19,7 @@ import com.project.travelbooking.helper.TravelBookingDbHelper;
 import com.project.travelbooking.model.PlaceModel;
 import com.project.travelbooking.model.TourModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +28,9 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView recentRecycler, toursRecycler;
-    PlaceAdapter placeAdapter;
-    TourAdapter tourAdapter;
+
     Map user = new HashMap<String, Object>();
+    private int selectedTab = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,59 +39,112 @@ public class MainActivity extends AppCompatActivity {
 
         user = (Map) getIntent().getSerializableExtra("loggedUserData");
 
-        TextView tvName = findViewById(R.id.tvName);
-        tvName.setText(user.get("name").toString());
+        final LinearLayout homeLayout = findViewById(R.id.homeLayout);
+        final LinearLayout cartLayout = findViewById(R.id.cartLayout);
+        final LinearLayout profileLayout = findViewById(R.id.profileLayout);
+        final ImageView homeImage = findViewById(R.id.homeImage);
+        final ImageView cartImage = findViewById(R.id.cartImage);
+        final ImageView profileImage = findViewById(R.id.profileImage);
+        final TextView homeTv = findViewById(R.id.homeTv);
+        final TextView cartTv = findViewById(R.id.cartTv);
+        final TextView profileTv = findViewById(R.id.profileTv);
+        Bundle arguments = new Bundle();
+        arguments.putSerializable("loggedUserData", (Serializable)user);
 
-        TravelBookingDbHelper.getAllPlaces(new Callback<ArrayList<PlaceModel>>() {
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragmentContainer, HomeFragment.class, arguments)
+                .commit();
+        homeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void callback(ArrayList<PlaceModel> listOfPlaces) {
-                listOfPlaces.forEach(placeModel -> {
-                    TravelBookingDbHelper.countTourOfPlaces(new Callback<Integer>() {
-                        @Override
-                        public void callback(Integer data) {
-                            placeModel.setTourCount(data);
-                            setPlacesRecycler(listOfPlaces);
-                        }
-                    }, placeModel.getPlaceId());
-                });
+            public void onClick(View v) {
+                if (selectedTab != 1) {
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, HomeFragment.class, arguments)
+                            .commit();
+
+                    cartTv.setVisibility(View.GONE);
+                    profileTv.setVisibility(View.GONE);
+
+                    cartImage.setImageResource(R.drawable.cart_svgrepo_com);
+                    profileImage.setImageResource(R.drawable.profile_round_1346_svgrepo_com);
+
+                    cartLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                    homeTv.setVisibility(View.VISIBLE);
+                    homeImage.setImageResource(R.drawable.home_selected);
+                    homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
+
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    homeLayout.startAnimation(scaleAnimation);
+
+                    selectedTab = 1;
+                }
             }
         });
-
-        TravelBookingDbHelper.getAllTours(new Callback<ArrayList<TourModel>>() {
+        cartLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void callback(ArrayList<TourModel> listOfTours) {
-                ArrayList<Integer> placeIds = listOfTours.stream().map(tour -> tour.getPlaceId()).distinct().collect(Collectors
-                        .toCollection(ArrayList::new));
-                TravelBookingDbHelper.getPlaceNamesFromPlaceIds(new Callback<ArrayList<PlaceModel>>() {
-                    @Override
-                    public void callback(ArrayList<PlaceModel> places) {
-                        listOfTours.forEach(tour -> {
-                            PlaceModel place = places.stream().filter(p -> p.getPlaceId() == tour.getPlaceId()).findFirst().get();
-                            tour.setPlaceName(place.getPlaceName());
-                            setToursRecycler(listOfTours);
-                        });
-                    }
-                }, placeIds);
+            public void onClick(View v) {
+                if (selectedTab != 2) {
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, CartFragment.class, arguments)
+                            .commit();
+                    homeTv.setVisibility(View.GONE);
+                    profileTv.setVisibility(View.GONE);
+
+                    homeImage.setImageResource(R.drawable.home_alt_svgrepo_com);
+                    profileImage.setImageResource(R.drawable.profile_round_1346_svgrepo_com);
+
+                    homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                    cartTv.setVisibility(View.VISIBLE);
+                    cartImage.setImageResource(R.drawable.cart_selected);
+                    cartLayout.setBackgroundResource(R.drawable.round_back_cart_100);
+
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    cartLayout.startAnimation(scaleAnimation);
+
+                    selectedTab = 2;
+                }
             }
         });
-    }
+        profileLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectedTab != 3) {
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, ProfileFragment.class, arguments)
+                            .commit();
+                    homeTv.setVisibility(View.GONE);
+                    cartTv.setVisibility(View.GONE);
 
-    private void setPlacesRecycler(List<PlaceModel> placesDataList) {
+                    homeImage.setImageResource(R.drawable.home_alt_svgrepo_com);
+                    cartImage.setImageResource(R.drawable.cart_svgrepo_com);
 
-        recentRecycler = findViewById(R.id.recent_recycler);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        recentRecycler.setLayoutManager(layoutManager);
-        placeAdapter = new PlaceAdapter(this, placesDataList);
-        recentRecycler.setAdapter(placeAdapter);
+                    homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    cartLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
-    }
+                    profileTv.setVisibility(View.VISIBLE);
+                    profileImage.setImageResource(R.drawable.profile_selected);
+                    profileLayout.setBackgroundResource(R.drawable.round_back_profile_100);
 
-    private void setToursRecycler(List<TourModel> toursDataList) {
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    profileLayout.startAnimation(scaleAnimation);
 
-        toursRecycler = findViewById(R.id.top_places_recycler);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        toursRecycler.setLayoutManager(layoutManager);
-        tourAdapter = new TourAdapter(this, toursDataList, user);
-        toursRecycler.setAdapter(tourAdapter);
+                    selectedTab = 3;
+                }
+            }
+        });
     }
 }

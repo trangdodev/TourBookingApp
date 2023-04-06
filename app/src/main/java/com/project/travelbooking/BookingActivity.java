@@ -66,6 +66,8 @@ public class BookingActivity extends AppCompatActivity {
                 finish();
             }
         });
+        TextView tvTourTitle = findViewById(R.id.tvTourTitle);
+        tvTourTitle.setText(tour.get("TourName").toString());
         setDefaultCustomerInfo(user);
         setDefaultTourInfo(tour);
         dialog = new Dialog(this);
@@ -173,7 +175,8 @@ public class BookingActivity extends AppCompatActivity {
                 ADULT_PRICE,
                 Integer.parseInt(edtChild.getText().toString()),
                 CHILD_PRICE,
-                1
+                1,
+                tour.get("ImageUrl").toString()
         );
     }
 
@@ -206,7 +209,7 @@ public class BookingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialog.dismiss();
                 Intent i = new Intent(BookingActivity.this, MainActivity.class);
-                i.putExtra("loggedUserData", (Serializable)user);
+                i.putExtra("loggedUserData", (Serializable) user);
                 startActivity(i);
                 finish();
             }

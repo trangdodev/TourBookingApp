@@ -9,5 +9,15 @@
     <color name="white">#FFFFFFFF</color>
     <color name="purple">#8692f7</color>
 
+    <color name="home">#5B37B7</color>
+    <color name="like">#C9379D</color>
+    <color name="notification">#1194AA</color>
+    <color name="profile">#1194AA</color>
+
+    <color name="home_20">#335B37B7</color>
+    <color name="like_20">#33C9379D</color>
+    <color name="notification_20">#331194AA</color>
+    <color name="profile_20">#331194AA</color>
+
 
 </resources>

@@ -24,7 +24,7 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
     EditText username;
     EditText password;
-    Button loginButton;
+    Button loginButton, btnSmsLogin;
 
     TextView registerBtn;
 
@@ -40,6 +40,15 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
         registerBtn = findViewById(R.id.signupText);
+        btnSmsLogin = findViewById(R.id.btnSmsLogin);
+        btnSmsLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this, PhoneAuthActivity.class);
+
+                startActivity(i);
+            }
+        });
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

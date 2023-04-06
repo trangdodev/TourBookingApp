@@ -43,6 +43,20 @@ public class TravelBookingDbHelper {
                 });
     }
 
+    public static void signInByPhoneNumber(@NonNull Callback<Map<String, Object>> finishedCallback, String phoneNumber) {
+        db.collection("users").whereEqualTo("phone", phoneNumber).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (queryDocumentSnapshots.isEmpty()) {
+                            createUser(finishedCallback, phoneNumber, phoneNumber, phoneNumber, "");
+                        } else {
+                            finishedCallback.callback(queryDocumentSnapshots.getDocuments().get(0).getData());
+                        }
+                    }
+                });
+    }
+
     public static void createUser(@NonNull Callback<Map<String, Object>> finishedCallback, String name, String phone, String username, String password) {
         Map<String, Object> user = new HashMap<>();
         user.put("name", name);
@@ -92,6 +106,16 @@ public class TravelBookingDbHelper {
                         saveSuccessCallback.callback(documentSnapshot.toObject(BookingModel.class));
                     }
                 });
+            }
+        });
+    }
+
+    public static void getAllBookingsByUsername(@NonNull Callback<ArrayList<BookingModel>> finishedCallback, String username) {
+        db.collection("bookings").whereEqualTo("Username", username).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                ArrayList<BookingModel> listOfBookings = new ArrayList<BookingModel>(queryDocumentSnapshots.toObjects(BookingModel.class));
+                finishedCallback.callback(listOfBookings);
             }
         });
     }
